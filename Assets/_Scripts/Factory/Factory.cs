@@ -53,7 +53,7 @@ public abstract class Factory : MonoBehaviour
         if (productionButtonsParent != null)
         {
             if (productionButtonsParent.activeSelf) CollectResources();
-            else FactoryManager.Instance.OpenFactoryUI(this);     
+            else FactoryManager.Instance.OpenFactoryUI(this);
         }
         else
         {
@@ -81,8 +81,15 @@ public abstract class Factory : MonoBehaviour
             if (ResourceManager.Instance.ConsumeResource(requiredResource, requiredResourceAmount))
             {
                 productionQueue++;
-                Debug.Log($"{producedResource} Factory: Production order added. Queue: {productionQueue}");
-                if (productionQueue == 1) StartProduction().Forget(); // If first order, start production
+                Debug.Log($"{producedResource} Factory: Production order added. Queue: {productionQueue}"); 
+                if (productionQueue == 1)
+                {
+                    // If the current token is canceled, create a new one
+                    if (productionCTS.IsCancellationRequested) productionCTS = new CancellationTokenSource();
+
+                    StartProduction().Forget();
+                }
+
                 UpdateUI();
             }
             else
@@ -100,18 +107,30 @@ public abstract class Factory : MonoBehaviour
     {
         if (productionQueue > 0)
         {
-            productionQueue--;//------------------------------------ Stop production if queue is 0 here
+            productionQueue--;
             Debug.Log($"{producedResource} Factory: Production order removed. Queue: {productionQueue}");
             UpdateUI();
+
+            if (productionQueue == 0)
+            {
+                productionCTS.Cancel();
+
+                productionTimerRemaining = 0;
+                remainingTimeSlider.value = 0;
+            }
         }
     }
 
     private async UniTaskVoid StartProduction()
     {
-        while (productionQueue > 0 && !productionCTS.Token.IsCancellationRequested)
+        CancellationToken ct = productionCTS.Token;
+        while (productionQueue > 0 && !ct.IsCancellationRequested)
         {
             float waitTime = (productionTimerRemaining > 0) ? productionTimerRemaining : productionTime;
-            await UpdateSlider(waitTime);
+            await UpdateSlider(waitTime, ct);
+
+            if (ct.IsCancellationRequested)
+                break;
 
             productionQueue--;
             currentStored = Mathf.Min(currentStored + 1, capacity);
@@ -124,13 +143,16 @@ public abstract class Factory : MonoBehaviour
     #endregion
 
     #region UI Functions
-    protected async UniTask UpdateSlider(float duration)
+    protected async UniTask UpdateSlider(float duration, CancellationToken ct)
     {
         float timeRemaining = duration;
         remainingTimeSlider.value = 1; // Start full
 
         while (timeRemaining > 0)
         {
+            if (ct.IsCancellationRequested)
+                return;
+
             timeRemaining -= Time.deltaTime;
             remainingTimeSlider.value = timeRemaining / duration;
             remainingTimeText.text = $"{Mathf.CeilToInt(timeRemaining)}s";
@@ -138,11 +160,9 @@ public abstract class Factory : MonoBehaviour
             await UniTask.Yield();
         }
 
-        if (remainingTimeSlider != null)
-        {
-            remainingTimeSlider.value = 0;
-        }
+        remainingTimeSlider.value = 0;
     }
+
 
     protected void UpdateUI()
     {

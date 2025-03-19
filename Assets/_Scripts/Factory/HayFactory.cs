@@ -20,7 +20,7 @@ public class HayFactory : Factory
             if (currentStored < capacity)
             {
                 float waitTime = (productionTimerRemaining > 0) ? productionTimerRemaining : productionTime;
-                await UpdateSlider(waitTime);
+                await UpdateSlider(waitTime, productionCTS.Token);
                 currentStored++;
                 Debug.Log($"HayFactory: 1 Wheat produced. Storage: {currentStored}");
                 UpdateUI();
