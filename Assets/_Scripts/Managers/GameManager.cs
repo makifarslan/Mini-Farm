@@ -1,14 +1,10 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-using System.Threading;
 
 public class GameManager : Singleton<GameManager>
 {
-    private CancellationTokenSource cancellationTokenSource;
-
     private void Start()
     {
-        cancellationTokenSource = new CancellationTokenSource();
         LoadGameAsync().Forget();
     }
 
@@ -22,7 +18,6 @@ public class GameManager : Singleton<GameManager>
     private async void OnApplicationQuit()
     {
         SaveManager.Instance.SaveGame();
-        cancellationTokenSource.Cancel();
         await UniTask.Delay(500);
         Debug.Log("Game Saved on Quit");
     }

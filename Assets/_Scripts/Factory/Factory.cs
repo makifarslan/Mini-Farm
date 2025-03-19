@@ -108,6 +108,8 @@ public abstract class Factory : MonoBehaviour
         if (productionQueue > 0)
         {
             productionQueue--;
+            ResourceManager.Instance.AddResource(requiredResource, requiredResourceAmount); // Refund
+
             Debug.Log($"{producedResource} Factory: Production order removed. Queue: {productionQueue}");
             UpdateUI();
 
