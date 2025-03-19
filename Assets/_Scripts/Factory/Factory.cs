@@ -16,6 +16,7 @@ public abstract class Factory : MonoBehaviour
     protected int currentStored = 0;
     protected int productionQueue = 0;
     protected CancellationTokenSource productionCTS;
+    protected float productionTimerRemaining = 0;
 
     [Header("UI")]
     [SerializeField] private TMP_Text currentStoredText;
@@ -30,6 +31,7 @@ public abstract class Factory : MonoBehaviour
 
     protected virtual void Start()
     {
+        FactoryManager.Instance.RegisterFactory(this);
         productionCTS = new CancellationTokenSource();
 
         if (productionButton != null) productionButton.onClick.AddListener(AddProductionOrder);
@@ -41,16 +43,26 @@ public abstract class Factory : MonoBehaviour
             .AddTo(this);
     }
 
-    private void OnMouseDown()
+    private void OnDestroy()
     {
-        if (currentStored > 0)
-        {
-            CollectResources();
-        }
-
-        FactoryManager.Instance.OpenFactoryUI(this);
+        productionCTS?.Cancel();
     }
 
+    private void OnMouseDown()
+    {
+        if (productionButtonsParent != null)
+        {
+            if (productionButtonsParent.activeSelf) CollectResources();
+            else FactoryManager.Instance.OpenFactoryUI(this);     
+        }
+        else
+        {
+            CollectResources();
+            FactoryManager.Instance.OpenFactoryUI(this);
+        }
+    }
+
+    #region Production Functions
     private void CollectResources()
     {
         if (currentStored > 0)
@@ -88,7 +100,7 @@ public abstract class Factory : MonoBehaviour
     {
         if (productionQueue > 0)
         {
-            productionQueue--;
+            productionQueue--;//------------------------------------ Stop production if queue is 0 here
             Debug.Log($"{producedResource} Factory: Production order removed. Queue: {productionQueue}");
             UpdateUI();
         }
@@ -98,18 +110,18 @@ public abstract class Factory : MonoBehaviour
     {
         while (productionQueue > 0 && !productionCTS.Token.IsCancellationRequested)
         {
-            await UpdateSlider(productionTime);
+            float waitTime = (productionTimerRemaining > 0) ? productionTimerRemaining : productionTime;
+            await UpdateSlider(waitTime);
+
             productionQueue--;
             currentStored = Mathf.Min(currentStored + 1, capacity);
+            productionTimerRemaining = 0;
             Debug.Log($"{producedResource} Factory: 1 {producedResource} produced. Storage: {currentStored}");
+
             UpdateUI();
         }
     }
-
-    private void OnDestroy()
-    {
-        productionCTS?.Cancel();
-    }
+    #endregion
 
     #region UI Functions
     protected async UniTask UpdateSlider(float duration)
@@ -122,10 +134,14 @@ public abstract class Factory : MonoBehaviour
             timeRemaining -= Time.deltaTime;
             remainingTimeSlider.value = timeRemaining / duration;
             remainingTimeText.text = $"{Mathf.CeilToInt(timeRemaining)}s";
+            productionTimerRemaining = timeRemaining;
             await UniTask.Yield();
         }
 
-        remainingTimeSlider.value = 0;
+        if (remainingTimeSlider != null)
+        {
+            remainingTimeSlider.value = 0;
+        }
     }
 
     protected void UpdateUI()
@@ -146,6 +162,50 @@ public abstract class Factory : MonoBehaviour
     public void ToggleProductionButtons(bool active)
     {
         if (productionButtonsParent != null) productionButtonsParent.SetActive(active);
+    }
+    #endregion
+
+    #region Save Functions
+    public virtual void LoadFromSaveData(FactorySaveData fsd, long elapsedTime)
+    {
+        currentStored = fsd.currentStored;
+        productionQueue = fsd.productionQueue;
+        productionTimerRemaining = fsd.productionTimer; // Load remaining time
+
+        float timePassed = productionTimerRemaining + elapsedTime; // Total elapsed time
+        int completedCycles = (int)(timePassed / productionTime); // How many cycles completed?
+        float remainder = timePassed % productionTime; // Remaining time for the next cycle
+
+        // Process completed productions
+        int producible = Mathf.Min(completedCycles, productionQueue);
+        productionQueue -= producible;
+        currentStored = Mathf.Min(currentStored + producible, capacity);
+
+        // Update the remaining timer for the next cycle
+        productionTimerRemaining = (productionQueue > 0) ? remainder : 0;
+
+        // Restart production if there's still a queue
+        if (productionQueue > 0)
+        {
+            StartProduction().Forget();
+        }
+
+        UpdateUI();
+    }
+
+    public int GetCurrentStored()
+    {
+        return currentStored;
+    }
+
+    public int GetProductionQueue()
+    {
+        return productionQueue;
+    }
+
+    public float GetProductionTimer()
+    {
+        return productionTimerRemaining;
     }
     #endregion
 }

@@ -6,9 +6,10 @@ public class HayFactory : Factory
 {
     public override ResourceType producedResource => ResourceType.Wheat;
 
-    protected override void Start()
+    protected override async void Start()
     {
         base.Start();
+        await GameManager.Instance.LoadGameAsync(); // Wait to load save data
         AutoProduce().Forget();
     }
 
@@ -18,7 +19,8 @@ public class HayFactory : Factory
         {
             if (currentStored < capacity)
             {
-                await UpdateSlider(productionTime);
+                float waitTime = (productionTimerRemaining > 0) ? productionTimerRemaining : productionTime;
+                await UpdateSlider(waitTime);
                 currentStored++;
                 Debug.Log($"HayFactory: 1 Wheat produced. Storage: {currentStored}");
                 UpdateUI();
@@ -28,5 +30,21 @@ public class HayFactory : Factory
                 await UniTask.Delay(500, cancellationToken: productionCTS.Token);
             }
         }
+    }
+
+    public override void LoadFromSaveData(FactorySaveData fsd, long elapsedTime)
+    {
+        currentStored = fsd.currentStored;
+        productionTimerRemaining = fsd.productionTimer;
+
+        float timePassed = productionTimerRemaining + elapsedTime;
+        int completedCycles = (int)(timePassed / productionTime);
+        float remainder = timePassed % productionTime;
+
+        // Process auto-produced items
+        currentStored = Mathf.Min(currentStored + completedCycles, capacity);
+        productionTimerRemaining = (currentStored < capacity) ? remainder : 0;
+
+        UpdateUI();
     }
 }

@@ -1787,6 +1787,7 @@ GameObject:
   - component: {fileID: 752093021}
   - component: {fileID: 752093018}
   - component: {fileID: 752093022}
+  - component: {fileID: 752093023}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -1858,6 +1859,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ab332e314cba788409f7ef4942c0cd82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allFactories: []
+--- !u!114 &752093023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752093016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5a1b621baec5d047950497017fd2eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &839390079 stripped
@@ -3435,6 +3449,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1011836562}
     m_Modifications:
+    - target: {fileID: 528169524178779392, guid: 85324ab9100e4104f8d5c24b20ded923, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5302135800497122151, guid: 85324ab9100e4104f8d5c24b20ded923, type: 3}
       propertyPath: m_Name
       value: FactoryUI
