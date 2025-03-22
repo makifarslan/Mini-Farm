@@ -923,6 +923,7 @@ GameObject:
   m_Component:
   - component: {fileID: 541820903}
   - component: {fileID: 541820904}
+  - component: {fileID: 541820906}
   - component: {fileID: 541820905}
   m_Layer: 0
   m_Name: BreadFactoryV1
@@ -965,13 +966,7 @@ MonoBehaviour:
   capacity: 20
   requiredResourceAmount: 2
   requiredResource: 1
-  currentStoredText: {fileID: 839390079}
-  productionQueueText: {fileID: 239858467}
-  remainingTimeText: {fileID: 1211594346}
-  remainingTimeSlider: {fileID: 2032468508}
-  productionButtonsParent: {fileID: 1007228926}
-  productionButton: {fileID: 239858466}
-  removeProductionButton: {fileID: 239858465}
+  factoryUI: {fileID: 541820906}
 --- !u!54 &541820905
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -999,6 +994,25 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &541820906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 541820902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17f5a5c25045b314c8652231bb71e7d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentStoredText: {fileID: 839390079}
+  productionQueueText: {fileID: 239858467}
+  remainingTimeText: {fileID: 1211594346}
+  remainingTimeSlider: {fileID: 2032468508}
+  productionButtonsParent: {fileID: 1007228926}
+  productionButton: {fileID: 239858466}
+  removeProductionButton: {fileID: 239858465}
 --- !u!114 &555410539 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7662194479032170759, guid: 85324ab9100e4104f8d5c24b20ded923, type: 3}
@@ -1698,6 +1712,7 @@ GameObject:
   m_Component:
   - component: {fileID: 736980085}
   - component: {fileID: 736980086}
+  - component: {fileID: 736980088}
   - component: {fileID: 736980087}
   m_Layer: 0
   m_Name: FlourFactory
@@ -1740,13 +1755,7 @@ MonoBehaviour:
   capacity: 10
   requiredResourceAmount: 1
   requiredResource: 0
-  currentStoredText: {fileID: 555410539}
-  productionQueueText: {fileID: 627836207}
-  remainingTimeText: {fileID: 1223945926}
-  remainingTimeSlider: {fileID: 1117043214}
-  productionButtonsParent: {fileID: 1117342949}
-  productionButton: {fileID: 627836206}
-  removeProductionButton: {fileID: 627836205}
+  factoryUI: {fileID: 736980088}
 --- !u!54 &736980087
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1774,6 +1783,25 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &736980088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 736980084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17f5a5c25045b314c8652231bb71e7d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentStoredText: {fileID: 555410539}
+  productionQueueText: {fileID: 627836207}
+  remainingTimeText: {fileID: 1223945926}
+  remainingTimeSlider: {fileID: 1117043214}
+  productionButtonsParent: {fileID: 1117342949}
+  productionButton: {fileID: 627836206}
+  removeProductionButton: {fileID: 627836205}
 --- !u!1 &752093016
 GameObject:
   m_ObjectHideFlags: 0
@@ -1882,6 +1910,7 @@ GameObject:
   m_Component:
   - component: {fileID: 863012675}
   - component: {fileID: 863012676}
+  - component: {fileID: 863012678}
   - component: {fileID: 863012677}
   m_Layer: 0
   m_Name: BreadFactoryV2
@@ -1924,13 +1953,7 @@ MonoBehaviour:
   capacity: 10
   requiredResourceAmount: 1
   requiredResource: 1
-  currentStoredText: {fileID: 612622418}
-  productionQueueText: {fileID: 1037036716}
-  remainingTimeText: {fileID: 1582124930}
-  remainingTimeSlider: {fileID: 1643427250}
-  productionButtonsParent: {fileID: 1164386886}
-  productionButton: {fileID: 1037036715}
-  removeProductionButton: {fileID: 1037036714}
+  factoryUI: {fileID: 863012678}
 --- !u!54 &863012677
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1958,6 +1981,25 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &863012678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 863012674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17f5a5c25045b314c8652231bb71e7d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentStoredText: {fileID: 612622418}
+  productionQueueText: {fileID: 1037036716}
+  remainingTimeText: {fileID: 1582124930}
+  remainingTimeSlider: {fileID: 1643427250}
+  productionButtonsParent: {fileID: 1164386886}
+  productionButton: {fileID: 1037036715}
+  removeProductionButton: {fileID: 1037036714}
 --- !u!1 &887387836
 GameObject:
   m_ObjectHideFlags: 0
@@ -2224,6 +2266,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1011836562}
   - component: {fileID: 1011836563}
+  - component: {fileID: 1011836565}
   - component: {fileID: 1011836564}
   m_Layer: 0
   m_Name: HayFactory
@@ -2266,13 +2309,7 @@ MonoBehaviour:
   capacity: 5
   requiredResourceAmount: 1
   requiredResource: 0
-  currentStoredText: {fileID: 951561383}
-  productionQueueText: {fileID: 111027289086233259}
-  remainingTimeText: {fileID: 1521070246}
-  remainingTimeSlider: {fileID: 67010487}
-  productionButtonsParent: {fileID: 0}
-  productionButton: {fileID: 0}
-  removeProductionButton: {fileID: 0}
+  factoryUI: {fileID: 1011836565}
 --- !u!54 &1011836564
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2300,6 +2337,25 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1011836565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1011836561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17f5a5c25045b314c8652231bb71e7d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentStoredText: {fileID: 951561383}
+  productionQueueText: {fileID: 111027289086233259}
+  remainingTimeText: {fileID: 1521070246}
+  remainingTimeSlider: {fileID: 67010487}
+  productionButtonsParent: {fileID: 0}
+  productionButton: {fileID: 0}
+  removeProductionButton: {fileID: 0}
 --- !u!1001 &1037036712
 PrefabInstance:
   m_ObjectHideFlags: 0

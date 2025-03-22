@@ -1,6 +1,5 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-using System.Threading;
 
 public class HayFactory : Factory
 {
@@ -9,8 +8,14 @@ public class HayFactory : Factory
     protected override async void Start()
     {
         base.Start();
-        await GameManager.Instance.LoadGameAsync(); // Wait to load save data
+        await GameManager.Instance.LoadGameAsync(); // Wait to load save
         AutoProduce().Forget();
+    }
+
+    protected override void OnMouseDown()
+    {
+        CollectResources();
+        FactoryManager.Instance.OpenFactoryUI(this);
     }
 
     private async UniTaskVoid AutoProduce()
@@ -20,7 +25,7 @@ public class HayFactory : Factory
             if (currentStored < capacity)
             {
                 float waitTime = (productionTimerRemaining > 0) ? productionTimerRemaining : productionTime;
-                await UpdateSlider(waitTime, productionCTS.Token);
+                await factoryUI.UpdateSlider(waitTime, productionCTS.Token);
                 currentStored++;
                 Debug.Log($"HayFactory: 1 Wheat produced. Storage: {currentStored}");
                 UpdateUI();
@@ -41,7 +46,6 @@ public class HayFactory : Factory
         int completedCycles = (int)(timePassed / productionTime);
         float remainder = timePassed % productionTime;
 
-        // Process auto-produced items
         currentStored = Mathf.Min(currentStored + completedCycles, capacity);
         productionTimerRemaining = (currentStored < capacity) ? remainder : 0;
 

@@ -20,7 +20,7 @@ public class FactoryManager : Singleton<FactoryManager>
             {
                 if (currentFactory != null)
                 {
-                    currentFactory.ToggleProductionButtons(false);
+                    currentFactory.factoryUI.ToggleProductionButtons(false);
                     currentFactory = null;
                 }
                 return;
@@ -44,9 +44,9 @@ public class FactoryManager : Singleton<FactoryManager>
     public void OpenFactoryUI(Factory factory)
     {
         if (currentFactory != null)
-            currentFactory.ToggleProductionButtons(false);
+            currentFactory.factoryUI.ToggleProductionButtons(false);
 
         currentFactory = factory;
-        currentFactory.ToggleProductionButtons(true);
+        currentFactory.factoryUI.ToggleProductionButtons(true);
     }
 }
