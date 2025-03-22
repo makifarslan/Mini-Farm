@@ -468,6 +468,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FactoryUI
       objectReference: {fileID: 0}
+    - target: {fileID: 5990073887956434988, guid: 85324ab9100e4104f8d5c24b20ded923, type: 3}
+      propertyPath: m_text
+      value: x2
+      objectReference: {fileID: 0}
     - target: {fileID: 6082124066009411168, guid: 85324ab9100e4104f8d5c24b20ded923, type: 3}
       propertyPath: m_IsActive
       value: 0
