@@ -168,21 +168,17 @@ public abstract class Factory : MonoBehaviour
         remainingTimeSlider.value = 0;
     }
 
-
     protected void UpdateUI()
     {
         // Update production texts
         currentStoredText.text = $"{currentStored}";
         productionQueueText.text = $"{productionQueue}/{capacity}";
-
-        // Update remaining time text
-        if (currentStored == capacity) remainingTimeText.text = "Full";
-        else remainingTimeText.text = productionQueue > 0 ? $"Queue: {productionQueue}" : "Idle";
+        remainingTimeText.text = currentStored == capacity ? "Full" : "Idle";
 
         // Update production buttons
         if (productionButton != null) productionButton.interactable = productionQueue < capacity
-                                                                      && productionQueue + currentStored < capacity
-                                                                      && resourceManager.resources[requiredResource] >= requiredResourceAmount;
+                                                                   && productionQueue + currentStored < capacity
+                                                                   && resourceManager.resources[requiredResource] >= requiredResourceAmount;
         if (removeProductionButton != null) removeProductionButton.interactable = productionQueue > 0;
     }
 
