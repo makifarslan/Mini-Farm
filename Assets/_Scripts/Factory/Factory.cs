@@ -4,6 +4,7 @@ using System.Threading;
 using TMPro;
 using UnityEngine.UI;
 using UniRx;
+using Zenject;
 
 public abstract class Factory : MonoBehaviour
 {
@@ -29,6 +30,8 @@ public abstract class Factory : MonoBehaviour
 
     public abstract ResourceType producedResource { get; }
 
+    [Inject] private ResourceManager resourceManager;
+
     protected virtual void Start()
     {
         FactoryManager.Instance.RegisterFactory(this);
@@ -38,7 +41,7 @@ public abstract class Factory : MonoBehaviour
         if (removeProductionButton != null) removeProductionButton.onClick.AddListener(RemoveProductionOrder);
 
         UpdateUI();
-        ResourceManager.Instance.resources.ObserveEveryValueChanged(dict => dict.ContainsKey(requiredResource) ? dict[requiredResource] : 0)
+        resourceManager.resources.ObserveEveryValueChanged(dict => dict.ContainsKey(requiredResource) ? dict[requiredResource] : 0)
             .Subscribe(_ => UpdateUI())
             .AddTo(this);
     }
@@ -67,7 +70,7 @@ public abstract class Factory : MonoBehaviour
     {
         if (currentStored > 0)
         {
-            ResourceManager.Instance.AddResource(producedResource, currentStored);
+            resourceManager.AddResource(producedResource, currentStored);
             Debug.Log($"Collected: {currentStored} {producedResource}");
             currentStored = 0;
             UpdateUI();
@@ -78,10 +81,10 @@ public abstract class Factory : MonoBehaviour
     {
         if (productionQueue < capacity)
         {
-            if (ResourceManager.Instance.ConsumeResource(requiredResource, requiredResourceAmount))
+            if (resourceManager.ConsumeResource(requiredResource, requiredResourceAmount))
             {
                 productionQueue++;
-                Debug.Log($"{producedResource} Factory: Production order added. Queue: {productionQueue}"); 
+                Debug.Log($"{producedResource} Factory: Production order added. Queue: {productionQueue}");
                 if (productionQueue == 1)
                 {
                     // If the current token is canceled, create a new one
@@ -108,7 +111,7 @@ public abstract class Factory : MonoBehaviour
         if (productionQueue > 0)
         {
             productionQueue--;
-            ResourceManager.Instance.AddResource(requiredResource, requiredResourceAmount); // Refund
+            resourceManager.AddResource(requiredResource, requiredResourceAmount); // Refund
 
             Debug.Log($"{producedResource} Factory: Production order removed. Queue: {productionQueue}");
             UpdateUI();
@@ -177,7 +180,9 @@ public abstract class Factory : MonoBehaviour
         else remainingTimeText.text = productionQueue > 0 ? $"Queue: {productionQueue}" : "Idle";
 
         // Update production buttons
-        if (productionButton != null) productionButton.interactable = productionQueue < capacity && productionQueue + currentStored < capacity && ResourceManager.Instance.resources[requiredResource] >= requiredResourceAmount;
+        if (productionButton != null) productionButton.interactable = productionQueue < capacity
+                                                                      && productionQueue + currentStored < capacity
+                                                                      && resourceManager.resources[requiredResource] >= requiredResourceAmount;
         if (removeProductionButton != null) removeProductionButton.interactable = productionQueue > 0;
     }
 

@@ -1,5 +1,5 @@
 using UniRx;
-using UnityEngine;
+using Zenject;
 
 public enum ResourceType
 {
@@ -8,12 +8,12 @@ public enum ResourceType
     Bread
 }
 
-public class ResourceManager : Singleton<ResourceManager>
+public class ResourceManager : IInitializable // Initialize this object after dependency injection
 {
     // Store resource amounts
     public ReactiveDictionary<ResourceType, int> resources = new ReactiveDictionary<ResourceType, int>();
 
-    private void Awake()
+    public void Initialize() // Instead of Awake()
     {
         resources[ResourceType.Wheat] = 0;
         resources[ResourceType.Flour] = 0;

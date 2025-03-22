@@ -2,10 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using Zenject;
 
 public class SaveManager : Singleton<SaveManager>
 {
-    private string saveFilePath;
+    [Inject] private ResourceManager resourceManager;
+
+    private string saveFilePath; // C:\Users\ABC\AppData\LocalLow\DefaultCompany\Mini-Farm
 
     private void Awake()
     {
@@ -23,7 +26,7 @@ public class SaveManager : Singleton<SaveManager>
         {
             ResourceData rd = new ResourceData();
             rd.resourceType = type;
-            rd.amount = ResourceManager.Instance.resources.ContainsKey(type) ? ResourceManager.Instance.resources[type] : 0;
+            rd.amount = resourceManager.resources.ContainsKey(type) ? resourceManager.resources[type] : 0;
             saveData.resources.Add(rd);
         }
 
@@ -60,7 +63,7 @@ public class SaveManager : Singleton<SaveManager>
         // Load resources
         foreach (ResourceData rd in saveData.resources)
         {
-            ResourceManager.Instance.resources[rd.resourceType] = rd.amount;
+            resourceManager.resources[rd.resourceType] = rd.amount;
         }
 
         // Load factories
